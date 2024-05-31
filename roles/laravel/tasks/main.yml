@@ -1,0 +1,6 @@
+---
+
+- name: Setup Sites
+  include_tasks: env.yml
+  with_items: "{{ sites }}"
+  tags: sites

@@ -1,0 +1,62 @@
+---
+
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: present
+  tags: packages
+
+- name: Remove default config
+  file:
+    dest: "/etc/nginx/sites-available/default"
+    state: absent
+  tags: setup
+
+- name: Unlink default config
+  file:
+    dest: "/etc/nginx/sites-enabled/default"
+    state: absent
+  tags: setup
+
+- name: Setup VHosts
+  include_tasks: vhost.yml
+  loop: "{{ sites }}"
+  tags: sites
+
+- name: Gather directories in /var/www/ not listed in sites
+  find:
+    paths: "/var/www/"
+    file_type: directory
+    excludes: "{{ sites | json_query('[].site_hostname') }}"
+  register: extra_dirs
+  changed_when: extra_dirs.matched > 0
+  tags: sites
+
+- name: Remove directories not listed in sites
+  file:
+    dest: "{{ item.path }}"
+    state: absent
+  when: extra_dirs.matched > 0
+  loop: "{{ extra_dirs.files }}"
+  loop_control:
+    label: "remove directory {{ item.path }}"
+  tags: sites
+
+- name: Gather NGINX site configs not listed in sites
+  find:
+    paths: "/etc/nginx/sites-available/"
+    file_type: any
+    excludes: "{{ sites | json_query('[].site_hostname') }}"
+  register: extra_sites
+  changed_when: extra_sites.matched > 0
+  tags: sites
+
+- name: Remove NGINX site configs not listed in sites
+  file:
+    dest: "/etc/nginx/{{ item[1] }}/{{ item[0].path | basename }}"
+    state: absent
+  when: extra_sites.matched > 0
+  loop: "{{ extra_sites.files | product(['sites-available','sites-enabled']) | list }}"
+  loop_control:
+    label: "remove NGINX config {{ item[0].path | basename }}"
+  tags: sites

@@ -1,0 +1,15 @@
+---
+php_version: 8.1
+sites:
+  - project: sheepstacker
+    site_name: SheepStacker
+    site_hostname: "sheepstacker.squigg.co.uk"
+    site_ssl: false
+    #    db_user_pw: "{{ vault_sheepstacker_db_pw }}"
+    #    laravel_env_vars: "{{ vault_sheepstacker_env }}"
+
+  - project: sheepstacker2
+    site_name: SheepStacker2
+    site_hostname: "sheepstacker2.squigg.co.uk"
+    site_ssl: false
+    #    db_user_pw: "{{ vault_sheepstacker_db_pw }}"

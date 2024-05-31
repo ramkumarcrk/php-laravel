@@ -1,0 +1,13 @@
+---
+
+- name: Create Database
+  mysql_db:
+    name: "{{ item.project }}"
+    state: present
+
+- name: Create Project User
+  mysql_user:
+    name: "{{ item.project }}"
+    password: "{{ item.db_user_pw }}"
+    priv: "{{ item.project }}.*:ALL"
+    state: present

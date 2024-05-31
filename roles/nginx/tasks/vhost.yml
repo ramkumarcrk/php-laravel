@@ -1,0 +1,20 @@
+---
+
+- name: Create site directory
+  file:
+    dest: "/var/www/{{ item.site_hostname }}"
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Copy Site Config
+  template:
+    src: ../templates/site.conf
+    dest: "/etc/nginx/sites-available/{{ item.site_hostname }}"
+
+- name: Enable Site
+  file:
+    src: "/etc/nginx/sites-available/{{ item.site_hostname }}"
+    dest: "/etc/nginx/sites-enabled/{{ item.site_hostname }}"
+    state: link
+  notify: Restart NGINX

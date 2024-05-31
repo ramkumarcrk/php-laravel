@@ -1,0 +1,42 @@
+---
+
+- name: Install Dependent Packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - software-properties-common
+    - python-pymysql
+    - python-mysqldb
+  tags: packages
+
+- name: Add MariaDB repo key
+  apt_key:
+    id: "0xF1656F24C74CD1D8"
+    state: present
+    keyserver: "hkp://keyserver.ubuntu.com:80"
+  tags: packages
+
+- name: Add MariaDB repository
+  apt_repository:
+    repo: "deb http://mirrors.ukfast.co.uk/sites/mariadb/repo/10.3/ubuntu {{ ansible_distribution_release }} main"
+    state: present
+  tags: packages
+
+- name: Install MariaDB
+  apt:
+    name: mariadb-server
+    state: present
+  tags: packages
+
+- name: Remove anonymous accounts
+  mysql_user:
+    name: ""
+    host_all: yes
+    state: absent
+  tags: setup
+
+- name: Setup Databases
+  include_tasks: db.yml
+  with_items: "{{ sites }}"
+  tags: sites

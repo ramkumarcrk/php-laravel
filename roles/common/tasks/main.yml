@@ -1,0 +1,15 @@
+---
+
+- name: Create main user
+  user:
+    name: squigg
+    password: "$6$EfgAG94Ej$fBMlcXfDUMuyxCojtXn9h5FJkq1YDfuaM4BcCjHkRA1i7cXPnFaqYMDsAbfIGo.X.xOKsSTESmXynS7ujJev40"
+    groups: adm,sudo
+    state: present
+  tags: setup
+
+- name: Set authorized SSH key
+  authorized_key:
+    user: squigg
+    state: present
+    key: "{{ lookup('file', '/home/squigg/.ssh/id_rsa.pub') }}"
