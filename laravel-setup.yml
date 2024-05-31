@@ -1,0 +1,12 @@
+---
+
+- name: Laravel Servers
+  hosts: localhost
+  #  remote_user: ubuntu
+  become: yes
+  roles:
+          #    - common
+    - php
+    - nginx
+      #    - database
+      #    - laravel
