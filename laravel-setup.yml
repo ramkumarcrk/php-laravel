@@ -8,5 +8,7 @@
           #    - common
     - php
     - nginx
+    - postgres-master
+    - mysql-master
       #    - database
       #    - laravel
