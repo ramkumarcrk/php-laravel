@@ -7,10 +7,27 @@
     owner: www-data
     group: www-data
 
-- name: Copy Site Config
+#- name: Copy Site Config
+#  template:
+#    src: ../templates/site.conf
+#    dest: "/etc/nginx/sites-available/{{ item.site_hostname }}"
+
+- name: Check if destination file exists
+  stat:
+    path: "/etc/nginx/sites-available/{{ item.site_hostname }}"
+  register: site_conf_stat
+
+- name: Compare source and destination configuration
+  command: diff ../templates/site.conf /etc/nginx/sites-available/{{ item.site_hostname }}
+  register: diff_result
+  ignore_errors: yes
+  when: site_conf_stat.stat.exists
+
+- name: Copy Site Config if destination does not exist or files are identical
   template:
     src: ../templates/site.conf
     dest: "/etc/nginx/sites-available/{{ item.site_hostname }}"
+  when: not site_conf_stat.stat.exists or diff_result.rc == 0
 
 - name: Enable Site
   file:
