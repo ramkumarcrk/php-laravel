@@ -1,15 +1,17 @@
 ---
+#To encrypt the password for the user , please use the following command
+#python3 -c 'import crypt; print(crypt.crypt("admin123", crypt.mksalt(crypt.METHOD_SHA512)))'
 
 - name: Create main user
   user:
-    name: squigg
-    password: "$6$EfgAG94Ej$fBMlcXfDUMuyxCojtXn9h5FJkq1YDfuaM4BcCjHkRA1i7cXPnFaqYMDsAbfIGo.X.xOKsSTESmXynS7ujJev40"
-    groups: adm,sudo
+    name: webuser
+    password: "$6$/OSwum7CFDA6Cspt$P15XzfrnaiQc4UMKJSAtipIAvDirzQyWWOZ7sw3K5m.a1FTxUzdoKHnVVZjixUdGOynJ99GRpHfNaY5r6WjhH0"
+    groups: sudo
     state: present
   tags: setup
 
-- name: Set authorized SSH key
-  authorized_key:
-    user: squigg
-    state: present
-    key: "{{ lookup('file', '/home/squigg/.ssh/id_rsa.pub') }}"
+#- name: Set authorized SSH key
+#  authorized_key:
+#    user: squigg
+#    state: present
+#    key: "{{ lookup('file', '/home/squigg/.ssh/id_rsa.pub') }}"
