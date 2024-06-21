@@ -5,10 +5,17 @@
   #  remote_user: ubuntu
   become: yes
   roles:
-          #    - common
+    - CISUBUNTU20
+    - common
     - php
     - nginx
+    - laravel
+    - role: nvm
+      nvm_version: 0.39.3
+      nvm_node_version: 14.17.6
+      nvm_commands: [npm install pm2 -g]
     - postgres-master
     - mysql-master
+    - ansible-role-redis
       #    - database
       #    - laravel
