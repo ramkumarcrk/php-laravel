@@ -25,3 +25,4 @@
   npm:
     name: pm2
     global: yes
+  ignore_errors: yes
